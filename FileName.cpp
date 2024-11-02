@@ -1,6 +1,8 @@
-#include <stdio.h> // доделать копирование массива для того что бы можно было сортировать несколько раз за заход, при малых размерах массива 
-#include <stdlib.h> // мб выводить его на экран
+#include <stdio.h> 
+#include <stdlib.h> 
 #include <time.h>
+#include <cstring> // библиотека из с++
+
 void bubble_sort(int arr[], int size)
 {
 	for (int i = 0; i < size; ++i)
@@ -43,7 +45,7 @@ void search_sort(int arr[], int size)
 	}
 }
 
-void insertion_sort(int arr[], int size) // не понимаю как работает, разобраться
+void insertion_sort(int arr[], int size) 
 {
 	for (int i = 1; i < size; ++i)
 	{
@@ -59,6 +61,7 @@ void insertion_sort(int arr[], int size) // не понимаю как работает, разобраться
 
 void array_generating(int arr[], int size)
 {
+	srand(time(NULL));
 	for (int i = 0; i < size; ++i)
 	{
 		arr[i] = rand() % 1000;
@@ -73,15 +76,19 @@ int main()
 	double time1=0;
 	double time2=0;
 	double time3=0;
+	int* copy; 
+
 	printf("Please write the length of array: ");
 	scanf_s("%d", &size);
-	mas = (int*)malloc(size * sizeof(int)); // не помню как работает
+	mas = (int*)malloc(size * sizeof(int)); // что именно делает здесь *int и почему выделяется память для mas?
 
 	if (mas == NULL) // почему решает проблему с printf?
 	{
-		printf("Memory allocation failed for mas1.\n");
+		printf("Memory allocation failed for mas\n");
 		return 1;
 	}
+
+	copy = (int*)malloc(size * sizeof(int));
 
 	array_generating(mas, size);
 
@@ -92,24 +99,27 @@ int main()
 
 		if (choose_option == 1)
 		{
+			memcpy(copy, mas, size);
 			clock_t start_time = clock();
-			bubble_sort(mas, size);
+			bubble_sort(copy, size);
 			clock_t end_time = clock();
 			time1 = (double)(end_time - start_time) / CLOCKS_PER_SEC;			
 		}
 
 		if (choose_option == 2)
 		{
+			memcpy(copy, mas, size);
 			clock_t start_time = clock();
-			search_sort(mas, size);
+			bubble_sort(copy, size);
 			clock_t end_time = clock();
 			time2 = (double)(end_time - start_time) / CLOCKS_PER_SEC;
 		}
 
 		if (choose_option == 3)
 		{
+			memcpy(copy, mas, size);
 			clock_t start_time = clock();
-			insertion_sort(mas, size);
+			bubble_sort(copy, size);
 			clock_t end_time = clock();
 			time3 = (double)(end_time - start_time) / CLOCKS_PER_SEC;
 		}
@@ -123,6 +133,6 @@ int main()
 	{
 		printf("%d ", mas[i]);
 	}*/
-	free(mas);
+	free(mas); // надо?
 	return 0;
 }
